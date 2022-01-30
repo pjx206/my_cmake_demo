@@ -1,8 +1,8 @@
 #include "dll.h"
-#include <stdio.h>
+#include "demo.h"
 
 int main() {
-    printf("%d", add(1, 2));
+    use_dll_func();
 
     return 0;
 }

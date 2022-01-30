@@ -3,10 +3,11 @@ cmake_minimum_required(VERSION 3.5)
 
 add_subdirectory(shared)
 
+get_target_property(SHARED_MODULE_INCLUDE_DIR shared_module INCLUDE_DIRECTORIES)
 
-include_directories(shared/include)
+include_directories(${SHARED_MODULE_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/lib/shared_module.lib)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/lib/shared_module.lib) # we use the .lib copied in custom_command below
 
 # copy linker file to certain place where the Demo can link
 add_custom_command(
