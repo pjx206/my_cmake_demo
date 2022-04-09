@@ -35,28 +35,32 @@ macro(py_config option output_var)
 endmacro()
 
 
-execute_process(COMMAND ${cython}
-    "-3"
-    ${CMAKE_CURRENT_LIST_DIR}/main.pyx)
-
-
 py_config(--python-include-path python_include_dir)
 py_config(--python-link-flags-cmake python_linking_data 0)
 
 set(GENERATED_C "${CMAKE_CURRENT_LIST_DIR}/main.c")
-set(GENERATED_LIB main)
+set(PY_MOD_NAME main)
+
+add_custom_command(
+    OUTPUT ${GENERATED_C}
+    PRE_BUILD
+    COMMAND ${cython} "-3" ${CMAKE_CURRENT_LIST_DIR}/main.pyx
+    VERBATIM
+    DEPENDS ${CMAKE_CURRENT_LIST_DIR}/main.pyx  # so that the C file will be regenerated when changes are applied to pyx
+)
 
 include_directories(${python_include_dir})
-add_library(${GENERATED_LIB} SHARED ${GENERATED_C})
+add_library(${PY_MOD_NAME} SHARED ${GENERATED_C})
+
 
 if (WIN32)
     message(STATUS "building on WIN32")
     list(GET python_linking_data 0 python_libdir)
     list(GET python_linking_data 1 python_lib)
     find_library(python_link_flags ${python_lib} PATHS ${python_libdir} HINTS ${python_libdir})
-    target_link_libraries(${GENERATED_LIB} PRIVATE ${python_link_flags})
+    target_link_libraries(${PY_MOD_NAME} PRIVATE ${python_link_flags})
 endif()
 
 if(WIN32)
-    set_property(TARGET ${GENERATED_LIB} PROPERTY SUFFIX ".pyd")
+    set_property(TARGET ${PY_MOD_NAME} PROPERTY SUFFIX ".pyd")
 endif()
