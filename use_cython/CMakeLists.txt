@@ -38,15 +38,15 @@ endmacro()
 py_config(--python-include-path python_include_dir)
 py_config(--python-link-flags-cmake python_linking_data 0)
 
-set(GENERATED_C "${CMAKE_CURRENT_LIST_DIR}/main.c")
 set(PY_MOD_NAME main)
+set(GENERATED_C "${CMAKE_CURRENT_LIST_DIR}/${PY_MOD_NAME}.c")
 
 add_custom_command(
     OUTPUT ${GENERATED_C}
     PRE_BUILD
-    COMMAND ${cython} "-3" ${CMAKE_CURRENT_LIST_DIR}/main.pyx
+    COMMAND ${cython} "-3" ${CMAKE_CURRENT_LIST_DIR}/${PY_MOD_NAME}.pyx
     VERBATIM
-    DEPENDS ${CMAKE_CURRENT_LIST_DIR}/main.pyx  # so that the C file will be regenerated when changes are applied to pyx
+    DEPENDS ${CMAKE_CURRENT_LIST_DIR}/${PY_MOD_NAME}.pyx  # so that the C file will be regenerated when changes are applied to pyx
 )
 
 include_directories(${python_include_dir})
