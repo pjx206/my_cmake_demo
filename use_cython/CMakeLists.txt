@@ -52,6 +52,13 @@ add_custom_command(
 include_directories(${python_include_dir})
 add_library(${PY_MOD_NAME} SHARED ${GENERATED_C})
 
+add_custom_command(
+    TARGET ${PY_MOD_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE_NAME:${PY_MOD_NAME}> ${CMAKE_CURRENT_LIST_DIR}
+    VERBATIM
+)
+
 
 if (WIN32)
     message(STATUS "building on WIN32")
