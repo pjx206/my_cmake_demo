@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 project(cython_demo)
 
-if (NOT python_interpreter)
-    find_program(python_interpreter "python")
+if (NOT Python3_FOUND)
+    find_package(Python3 COMPONENTS Interpreter)
 endif()
-message(STATUS "Using python: ${python_interpreter}")
+message(STATUS "Using python: ${Python3_EXECUTABLE}")
 
 if (NOT cython)
     find_program(cython "cython")
@@ -21,7 +21,7 @@ macro(py_config option output_var)
     endif()
 
     execute_process(
-      COMMAND ${python_interpreter} "${CMAKE_CURRENT_LIST_DIR}/py_config.py"
+      COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_LIST_DIR}/py_config.py"
               ${option}
       OUTPUT_VARIABLE ${output_var}
       OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -63,4 +63,8 @@ endif()
 
 if(WIN32)
     set_property(TARGET ${PY_MOD_NAME} PROPERTY SUFFIX ".pyd")
+endif()
+
+if(UNIX)
+    set_property(TARGET ${PY_MOD_NAME} PROPERTY PREFIX "")
 endif()
