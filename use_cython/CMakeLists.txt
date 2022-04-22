@@ -38,7 +38,7 @@ endmacro()
 py_config(--python-include-path python_include_dir)
 py_config(--python-link-flags-cmake python_linking_data 0)
 
-set(PY_MOD_NAME main)
+set(PY_MOD_NAME main) # You will only need to modify the name here if your .pyx file has a different name
 set(GENERATED_C "${CMAKE_CURRENT_LIST_DIR}/${PY_MOD_NAME}.c")
 
 add_custom_command(
